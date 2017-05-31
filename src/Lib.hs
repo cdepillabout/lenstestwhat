@@ -17,8 +17,8 @@ incrementThrough' a l = cloneLens l (\b -> b + 1 <$ print b) a
 tuple :: (Int, Int)
 tuple = (1, 2)
 
--- testIncrementThrough :: Bool -> IO (Int, Int)
--- testIncrementThrough = incrementThrough tuple . bFunc
+testIncrementThrough :: Bool -> IO (Int, Int)
+testIncrementThrough = incrementThrough tuple . bFunc
 
 testIncrementThrough' :: Bool -> IO (Int, Int)
 testIncrementThrough' = incrementThrough' tuple . bFunc
