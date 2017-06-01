@@ -125,15 +125,49 @@ compApplicativeable = (.)
 -- This works? --
 -----------------
 
-testFIntWorks1 :: Bool -> IO Int
-testFIntWorks1 = fInt `compApplicativeWorks1` toApplicative
+-- testFIntWorks1 :: Bool -> IO Int
+-- testFIntWorks1 = fInt `compApplicativeWorks1` toApplicative
 
 compApplicativeWorks1
   :: ((forall g. Applicative g => g Int) -> IO Int)
-  -> (forall f. Applicative f => Bool -> f Int)
+  -- -> (forall f. Applicative f => Bool -> f Int)
+  -> (Bool -> (forall f. Applicative f => f Int))
   -> Bool
   -> IO Int
-compApplicativeWorks1 g f b = g $ f b
+compApplicativeWorks1 g f b = (g `blah` f :: Bool -> IO Int) $ b
+
+blah
+  :: ((forall g. Applicative g => g Int) -> IO Int)
+  -- -> (forall f. Applicative f => Bool -> f Int)
+  -> (Bool -> (forall f. Applicative f => f Int))
+  -> Bool
+  -> IO Int
+-- blah g f b = undefined -- g `gaga` f $ b
+-- blah g f b = g . f $ b
+-- blah g f b = ((.)
+--   :: ((forall g. Applicative g => g Int) -> IO Int)
+--   -> (Bool -> (forall f. Applicative f => f Int))
+--   -> Bool
+--   -> IO Int) g (f :: Bool -> IO Int) b
+blah g f b = g $ f $ b
+
+-- gaga
+--   :: forall a c.
+--      ((forall d. d) -> c)
+--   -> (a -> (forall b. b))
+--   -> (a -> c)
+-- gaga = undefined -- (.) :: 
+--      -- ((forall f. Applicative f => f Int) -> c)
+--   -- -> (a -> (forall g. Applicative g => g Int))
+--   -- -> (a -> c)
+
+data What = What (forall b. b)
+
+papa :: [What]
+papa = []
+
+lala :: forall f. Applicative f => Bool -> f Int
+lala = toApplicative
 
 -----------------
 -- This works? --
@@ -148,3 +182,12 @@ compApplicativeWorks2
   -> Bool
   -> IO Int
 compApplicativeWorks2 g f b = g $ f b
+
+
+
+
+---------------------------
+
+
+blahblahblah :: (forall f. Applicative f => f Int) -> IO Int
+blahblahblah f = fmap (+ 1) f
